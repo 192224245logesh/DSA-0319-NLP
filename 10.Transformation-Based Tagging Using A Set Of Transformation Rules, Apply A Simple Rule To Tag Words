@@ -1,20 +1,33 @@
-import nltk
-nltk.download('averaged_perceptron_tagger')
-training_data = [
-    [('The', 'DT'), ('cat', 'NN'), ('is', 'VBZ'), ('on', 'IN'), ('the', 'DT'), ('mat', 'NN')],
-    [('I', 'PRP'), ('love', 'VBP'), ('eating', 'VBG'), ('pizza', 'NN')]
-]
-rules = [
-    ('NN', 'VBZ', 'VBG'),  
-    ('NN', 'VBZ', 'NN'),  
-    ('VBG', 'NN', 'VBG'), 
-]
-for sentence in training_data:
-    for i in range(len(sentence) - 1):
-        for (tag1, tag2, new_tag) in rules:
-            if (sentence[i][1] == tag1 and sentence[i+1][1] == tag2):
-                sentence[i] = (sentence[i][0], new_tag)
-test_sentence = "The cat is on the mat"
-tagged_sentence = nltk.pos_tag(test_sentence.split())
-print("Original test sentence:", test_sentence)
-print("Tagged sentence after transformation:", tagged_sentence)
+# prompt: 10.Transformation-Based Tagging Using A Set Of Transformation Rules, Apply A Simple Rule To Tag Words
+
+def apply_transformation_rule(word, tag_rules):
+  """Applies a set of transformation rules to tag a word.
+
+  Args:
+    word: The word to tag.
+    tag_rules: A dictionary of transformation rules, where keys are 
+               regular expressions and values are tags.
+
+  Returns:
+    The tagged word (e.g., 'word/TAG').
+  """
+  for regex, tag in tag_rules.items():
+    if re.search(regex, word):
+      return word + "/" + tag
+  return word + "/NN"  # Default tag if no rule matches
+
+
+import re
+
+# Example transformation rules (you can expand this)
+tag_rules = {
+    r".*ing$": "VBG",  # Gerunds (e.g., running, swimming)
+    r".*ed$": "VBD",  # Past tense verbs (e.g., played, walked)
+    r".*ly$": "RB",   # Adverbs (e.g., quickly, happily)
+}
+
+
+# Example usage
+word = "running"
+tagged_word = apply_transformation_rule(word, tag_rules)
+print(tagged_word)  # Output: running/VBG
