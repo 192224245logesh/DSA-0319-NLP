@@ -1,5 +1,8 @@
 import nltk
 
+# Download the necessary NLTK data
+nltk.download('punkt_tab')
+
 def generate_parse_tree(sentence, grammar):
     parser = nltk.ChartParser(grammar)
     tokens = nltk.word_tokenize(sentence)
